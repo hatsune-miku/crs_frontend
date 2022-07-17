@@ -1,11 +1,11 @@
 import React from 'react'
-import './App.css'
+import './App.scss'
 
 import 'element-react'
 import 'element-theme-default'
-import { Button } from 'element-react';
+import { Button } from 'element-react'
 
-function App() {
+export default function App() {
   return (
     <div className="App">
       <header className="App-header">
@@ -15,7 +15,5 @@ function App() {
         <Button type='primary'>Learn React</Button>
       </header>
     </div>
-  );
+  )
 }
-
-export default App
