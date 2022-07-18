@@ -1,19 +1,25 @@
-import React from 'react'
-import './App.scss'
+import React from "react";
+import "./App.scss";
 
-import 'element-react'
-import 'element-theme-default'
-import { Button } from 'element-react'
+import { useColorScheme } from "@mui/joy/styles";
+
+// The router.
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+// Pages
+import PageMain from "./components/page_main";
+import PageLogin from "./components/page_login";
 
 export default function App() {
+  useColorScheme().setMode("dark");
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <Button type='primary'>Learn React</Button>
-      </header>
+    <div>
+      <Router>
+        <Routes>
+          <Route path="/" element={<PageLogin />} />
+        </Routes>
+      </Router>
     </div>
-  )
+  );
 }
