@@ -27,13 +27,14 @@ type PagedEntityList<T> = {
     empty: boolean
 }
 
-type SessionInfo = {
+type LoginResponse = {
     success: boolean,
+    reason: string,
     sessionId: string
 }
 
 export type { 
     PagedEntityList,
-    SessionInfo
+    LoginResponse
 }
 
