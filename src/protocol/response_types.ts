@@ -30,7 +30,9 @@ type PagedEntityList<T> = {
 type LoginResponse = {
     success: boolean,
     reason: string,
-    sessionId: string
+    sessionId: string,
+    isAdmin: boolean,
+    name: string
 }
 
 export type { 
