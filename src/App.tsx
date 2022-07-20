@@ -12,17 +12,25 @@ import PageLogin from "./components/page_login";
 import PageGeneric from "./components/page_generic";
 
 export default function App() {
-  useColorSchemeJoyUI().setMode("dark");
-  useColorSchemeMaterialUI().setMode("dark");
+  const colorSchemeControl = [
+    useColorSchemeJoyUI(),
+    useColorSchemeMaterialUI()
+  ]
+
+  const setMode = (mode: any) => {
+    for (const scheme of colorSchemeControl) {
+        scheme.setMode(mode);
+    }
+  }
 
   return (
     <div>
       <Router>
         <Routes>
           <Route path="/" element={<PageLogin />} />
-            <Route path="/student" element={<PageGeneric role="student" />} />
-            <Route path="/staff" element={<PageGeneric role="staff" />} />
-            <Route path="/admin" element={<PageGeneric role="admin" />} />
+            <Route path="/student" element={<PageGeneric setMode={setMode} role="student" />} />
+            <Route path="/staff" element={<PageGeneric setMode={setMode} role="staff" />} />
+            <Route path="/admin" element={<PageGeneric setMode={setMode} role="admin" />} />
         </Routes>
       </Router>
     </div>

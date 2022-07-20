@@ -21,7 +21,7 @@ import Menu from './layout/menu';
 import Layout from './layout/layout';
 import Session from "../util/session";
 import {Navigate} from "react-router-dom";
-import {Key, KeyRounded, LensRounded} from "@mui/icons-material";
+import {Key, KeyRounded, LensRounded, Settings as MaterialSettings } from "@mui/icons-material";
 import StudentTable from "./widget/student_table";
 import MajorTable from "./widget/major_table";
 import PlanTable from "./widget/plan_table";
@@ -45,6 +45,7 @@ import {DatePicker} from '@mui/x-date-pickers/DatePicker';
 import {TextField as MaterialTextField} from '@mui/material';
 import {GridSelectionModel} from "@mui/x-data-grid/models/gridSelectionModel";
 import {GridCallbackDetails} from "@mui/x-data-grid/models/api";
+import Settings from "../util/settings";
 
 const md5 = require('md5');
 
@@ -56,6 +57,9 @@ type GivenField = {
 
 type PageAdminProps = {
     role: string;
+
+    /* Color scheme */
+    setMode: (mode: any) => void;
 };
 
 type PageAdminState = {
@@ -79,10 +83,10 @@ type PageAdminState = {
     promptChild: React.ReactNode,
     promptCancelButtonText: string | null;
     promptOkButtonText: string | null;
-    promptOkButtonColor: OverridableStringUnion<ColorPaletteProp, ButtonPropsColorOverrides>,
-    promptCancelButtonInvisible: boolean,
-    promptBackgroundClickCancellable: boolean,
-    promptNotDismissible: boolean,
+    promptOkButtonColor: OverridableStringUnion<ColorPaletteProp, ButtonPropsColorOverrides>;
+    promptCancelButtonInvisible: boolean;
+    promptBackgroundClickCancellable: boolean;
+    promptNotDismissible: boolean;
     currentEditingModel: any;
 };
 
@@ -119,7 +123,25 @@ export default class PageGeneric extends React.Component<PageAdminProps, PageAdm
     }
 
     componentDidMount() {
+        this.changeColorScheme(Settings.getStoredColorScheme());
         this.checkSession();
+    }
+
+    forceRedrawMaterialComponents() {
+        const currentEntityBackup = this.state.currentEntity;
+        this.setState({
+            currentEntity: '',
+        }, () => {
+            this.setState({
+                currentEntity: currentEntityBackup
+            })
+        });
+    }
+
+    changeColorScheme(colorScheme: string) {
+        Settings.setStoredColorScheme(colorScheme);
+        this.props.setMode(colorScheme);
+        this.forceRedrawMaterialComponents();
     }
 
     getRoleDescription(): string {
@@ -131,7 +153,7 @@ export default class PageGeneric extends React.Component<PageAdminProps, PageAdm
             case 'student':
                 return 'Student';
             default:
-                return 'Unknown';
+                return 'Unknown Role';
         }
     }
 
@@ -725,6 +747,7 @@ export default class PageGeneric extends React.Component<PageAdminProps, PageAdm
                     onSelectionModelChanged={this.handleIndexItemsChanged.bind(this)}
                     getRowIdFunction={(row: any) => row.studentNumber}
                 />
+
             case 'major':
                 return <GenericTable
                     key="major"
@@ -735,6 +758,7 @@ export default class PageGeneric extends React.Component<PageAdminProps, PageAdm
                     onSelectionModelChanged={this.handleIndexItemsChanged.bind(this)}
                     getRowIdFunction={(row: any) => row.name}
                 />
+
             case 'plan':
                 return <GenericTable
                     key="plan"
@@ -745,6 +769,7 @@ export default class PageGeneric extends React.Component<PageAdminProps, PageAdm
                     onSelectionModelChanged={this.handleIndexItemsChanged.bind(this)}
                     getRowIdFunction={(row: any) => row.name}
                 />
+
             case 'staff':
                 return <GenericTable
                     key="staff"
@@ -755,6 +780,7 @@ export default class PageGeneric extends React.Component<PageAdminProps, PageAdm
                     onSelectionModelChanged={this.handleIndexItemsChanged.bind(this)}
                     getRowIdFunction={(row: any) => row.staffNumber}
                 />
+
             case 'grade':
                 return <GenericTable
                     key="grade"
@@ -765,6 +791,7 @@ export default class PageGeneric extends React.Component<PageAdminProps, PageAdm
                     onSelectionModelChanged={this.handleIndexItemsChanged.bind(this)}
                     getRowIdFunction={(row: any) => row.id}
                 />
+
             case 'registration':
                 return <GenericTable
                     key="registration"
@@ -775,6 +802,7 @@ export default class PageGeneric extends React.Component<PageAdminProps, PageAdm
                     onSelectionModelChanged={this.handleIndexItemsChanged.bind(this)}
                     getRowIdFunction={(row: any) => row.id}
                 />
+
             case 'course':
                 return <GenericTable
                     key="course"
@@ -785,10 +813,13 @@ export default class PageGeneric extends React.Component<PageAdminProps, PageAdm
                     onSelectionModelChanged={this.handleIndexItemsChanged.bind(this)}
                     getRowIdFunction={(row: any) => row.crn}
                 />
+
             case 'about':
                 return <About/>;
+
             case 'engi':
                 return <About/>;
+
             default:
                 return <div>No table</div>;
         }
@@ -983,11 +1014,43 @@ export default class PageGeneric extends React.Component<PageAdminProps, PageAdm
                                 <GroupRoundedIcon/>
                             </IconButton>
                             <Typography component="h1" fontWeight="xl">
-                                {Session.getStoredName()}, {this.getRoleDescription()} @ CRS
+                                {Session.getStoredName()} - {this.getRoleDescription()} @ CRS
                             </Typography>
                         </Box>
-
                         <Box sx={{display: 'flex', flexDirection: 'row', gap: 1.5}}>
+                            <Menu
+                                id="app-selector"
+                                control={
+                                    <IconButton
+                                        size="sm"
+                                        variant="solid"
+                                        color="neutral"
+                                        aria-label="Apps"
+                                    >
+                                        <MaterialSettings/>
+                                    </IconButton>
+                                }
+                                menus={[
+                                    {
+                                        label: 'Dark Mode',
+                                        onClick: () => {
+                                            this.changeColorScheme('dark')
+                                        },
+                                    },
+                                    {
+                                        label: 'Light Mode',
+                                        onClick: () => {
+                                            this.changeColorScheme('light')
+                                        },
+                                    },
+                                    {
+                                        label: 'Follow System',
+                                        onClick: () => {
+                                            this.changeColorScheme('system')
+                                        },
+                                    },
+                                ]}
+                            />
                             <Menu
                                 id="app-selector"
                                 control={
