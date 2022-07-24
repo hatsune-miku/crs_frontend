@@ -21,7 +21,7 @@ import Menu from './layout/menu';
 import Layout from './layout/layout';
 import Session from "../util/session";
 import {Navigate} from "react-router-dom";
-import {Key, KeyRounded, LensRounded, Settings as MaterialSettings } from "@mui/icons-material";
+import {Key, KeyRounded, LensRounded, Settings as MaterialSettings} from "@mui/icons-material";
 import StudentTable from "./widget/student_table";
 import MajorTable from "./widget/major_table";
 import PlanTable from "./widget/plan_table";
@@ -228,59 +228,59 @@ export default class PageGeneric extends React.Component<PageAdminProps, PageAdm
 
     async handlePromptAction(subject: string, action: PromptAction) {
         this.setState({shouldShowPrompt: false});
-        if (subject === 'logout' && action === 'ok') {
-            // Perform logout.
-            Session.clearStoredSessionId();
-            Session.clearStoredaccountNumber();
-            this.setState({redirectTo: '/'});
+        try {
+            if (subject === 'logout' && action === 'ok') {
+                // Perform logout.
+                Session.clearStoredSessionId();
+                Session.clearStoredaccountNumber();
+                this.setState({redirectTo: '/'});
 
-        } else if (subject === 'delete' && action === 'ok') {
-            // Perform delete.
-            this.setState({
-                shouldShowPrompt: true,
-                promptCaption: "Deleting",
-                promptText: "Process is running. Please wait.",
-                promptNotDismissible: true,
-                promptChild: null,
-            })
+            } else if (subject === 'delete' && action === 'ok') {
+                // Perform delete.
+                this.setState({
+                    shouldShowPrompt: true,
+                    promptCaption: "Deleting",
+                    promptText: "Process is running. Please wait.",
+                    promptNotDismissible: true,
+                    promptChild: null,
+                })
 
-            await this.performDelete();
+                await this.performDelete();
 
-            this.setState({
-                promptNotDismissible: false,
-                shouldShowPrompt: false,
-            })
-            this.state.dataTableReference?.componentDidMount();
+                this.setState({
+                    promptNotDismissible: false,
+                    shouldShowPrompt: false,
+                })
+                this.state.dataTableReference?.componentDidMount();
 
-        } else if (subject === 'add' && action === 'ok') {
-            // Check if the model is valid.
-            try {
+            } else if (subject === 'add' && action === 'ok') {
+                // Check if the model is valid.
                 await this.performAdd();
                 this.setState({
                     currentEditingModel: {},
                     shouldShowPrompt: false,
                 });
                 this.state.dataTableReference?.componentDidMount();
-            } catch (e: any) {
-                this.setState({
-                    shouldShowAlert: true,
-                    alertText: "Some required fields are empty or duplicated.",
-                    alertSeverity: "error",
-                });
+
             }
+        } catch (e: any) {
+            this.setState({
+                shouldShowAlert: true,
+                alertText: Network.friendlyError(e,
+                    `${subject} the ${this.state.currentEntity}`),
+                alertSeverity: "error",
+            });
+        } finally {
+            this.setState({shouldShowPrompt: false});
         }
     }
 
     async performDelete() {
         for (const indexItem of this.state.indexItems) {
-            try {
-                await Network.deleteOne(
-                    this.state.currentEntity,
-                    indexItem
-                );
-            } catch (e) {
-                // ignored.
-            }
+            await Network.deleteOne(
+                this.state.currentEntity,
+                indexItem
+            );
         }
     }
 

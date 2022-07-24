@@ -71,11 +71,20 @@ export default class GenericTable<T> extends React.Component<GenericTableProps<T
 
     async loadPage(pageIndex: number) {
         this.setState({isLoading: true});
-        const entityList: PagedEntityList<T> = await Network.getPagedData(
+        let response = await Network.getPagedData(
             this.props.entityName,
             pageIndex,
             this.props.searchKeyword || "",
         );
+        // @ts-ignore
+        let entityList: PagedEntityList<T> = response.data;
+
+        // The error pattern.
+        if (entityList.content[0] === null) {
+            console.log(response)
+            entityList.content = [];
+            entityList.totalElements = 0;
+        }
 
         for (const entity of entityList.content) {
             for (const column of this.props.columns) {

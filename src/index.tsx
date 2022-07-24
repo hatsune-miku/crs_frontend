@@ -5,7 +5,6 @@ import "./index.scss";
 import App from "./App";
 
 import {StyledEngineProvider, CssVarsProvider} from "@mui/joy/styles";
-import {ThemeProvider, createTheme} from "@mui/material/styles";
 
 import reportWebVitals from "./profiler/reportWebVitals";
 import {MuiCompatCssVarsProvider} from "./joyui_ext/mui_compat";
@@ -13,8 +12,8 @@ import {MuiCompatCssVarsProvider} from "./joyui_ext/mui_compat";
 ReactDOM.createRoot(document.querySelector("#root")!).render(
     <React.StrictMode>
         <StyledEngineProvider injectFirst>
-            <MuiCompatCssVarsProvider>
-                <CssVarsProvider>
+            <MuiCompatCssVarsProvider disableTransitionOnChange>
+                <CssVarsProvider disableTransitionOnChange>
                     <App/>
                 </CssVarsProvider>
             </MuiCompatCssVarsProvider>

@@ -118,6 +118,7 @@ export default class PageLogin extends React.Component<PageLoginProps,
         this.setState({
             isLoading: true,
             shouldShowAlert: true,
+            alertSeverity: "info",
             loginText: "Logging in...",
         });
 

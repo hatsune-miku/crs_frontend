@@ -1,14 +1,37 @@
-import axios, { AxiosPromise } from "axios";
+import axios, {AxiosPromise, AxiosResponse} from "axios";
 import { PagedEntityList, LoginResponse } from "../protocol/response_types";
+import Session from "./session";
 
 export default class Network {
   // static BaseURL = "http://45.76.181.130:8080/api/v1/";
   static BaseURL = "http://localhost:8080/api/v1/";
 
+  static friendlyError(error: any, action: string = 'do this'): string {
+    if (!error) {
+      return "Unknown error.";
+    }
+
+    if (error.response) {
+      switch (error.response.status) {
+        case 401:
+        case 500:
+          return `You don't have permission to ${action}.`;
+        case 404:
+          return "The requested resource was not found.";
+      }
+    }
+    return error.message || error.toString();
+  }
+
   static request(path: string, method: string, data: any): AxiosPromise {
+    let url = Network.BaseURL + path;
+    if (!path.includes("?")) {
+      url += '?';
+    }
+    url += '&sessionId=' + Session.getStoredSessionId();
     return axios({
       method: method,
-      url: Network.BaseURL + path,
+      url: url,
       data: data,
     });
   }
@@ -21,8 +44,8 @@ export default class Network {
     return Network.request(path, "POST", data);
   }
 
-  static async getPagedData<T>(entity: string, pageNumber: number, keyword: string = ''): Promise<PagedEntityList<T> > {
-    return (await Network.get(entity + "?page=" + pageNumber + "&search=" + keyword)).data;
+  static async getPagedData(entity: string, pageNumber: number, keyword: string = '') {
+    return await Network.get(entity + "?page=" + pageNumber + "&search=" + keyword);
   }
 
   static async getOne<T>(entity: string, indexItem: string | number): Promise<T> {
