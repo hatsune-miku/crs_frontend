@@ -72,15 +72,15 @@ export default class PageLogin extends React.Component<PageLoginProps,
 
     tryRestoreSession = async () => {
         const storedSessionId = Session.getStoredSessionId();
-        const storedaccountNumber = Session.getStoredaccountNumber();
-        if (!storedSessionId || !storedaccountNumber) {
+        const storedAccountNumber = Session.getStoredAccountNumber();
+        if (!storedSessionId || !storedAccountNumber) {
             return;
         }
         this.setState({
             isLoading: true,
             shouldShowAlert: true,
             alertSeverity: "info",
-            username: storedaccountNumber,
+            username: storedAccountNumber,
             alertText: "Session obtained. Restoring...",
         });
         console.log("sessionId", storedSessionId);
@@ -95,7 +95,7 @@ export default class PageLogin extends React.Component<PageLoginProps,
                 });
             } else {
                 Session.clearStoredSessionId();
-                Session.clearStoredaccountNumber();
+                Session.clearStoredAccountNumber();
                 Session.clearStoredName();
                 Session.clearStoredRole();
 
@@ -132,7 +132,6 @@ export default class PageLogin extends React.Component<PageLoginProps,
 
             if (response.success) {
                 Session.setStoredName(response.name);
-                Session.setStoredRole(this.state.loginRole);
 
                 if (response.isAdmin) {
                     this.setState({
@@ -141,6 +140,7 @@ export default class PageLogin extends React.Component<PageLoginProps,
                         // Admin login.
                         Session.setStoredSessionId(response.sessionId);
                         Session.setStoredAccountNumber(this.state.username);
+                        Session.setStoredRole('admin');
                         this.tryRestoreSession();
                     });
                 }
@@ -148,7 +148,8 @@ export default class PageLogin extends React.Component<PageLoginProps,
                     // Others login.
                     Session.setStoredSessionId(response.sessionId);
                     Session.setStoredAccountNumber(this.state.username);
-                    this.tryRestoreSession();
+                    Session.setStoredRole(this.state.loginRole);
+                    await this.tryRestoreSession();
                 }
 
             } else {

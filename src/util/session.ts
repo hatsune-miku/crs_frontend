@@ -5,7 +5,7 @@ export default class Session {
         return localStorage.getItem("sessionId");
     }
 
-    static getStoredaccountNumber(): string | null {
+    static getStoredAccountNumber(): string | null {
         return localStorage.getItem("accountNumber");
     }
 
@@ -37,7 +37,7 @@ export default class Session {
         localStorage.removeItem("sessionId");
     }
 
-    static clearStoredaccountNumber(): void {
+    static clearStoredAccountNumber(): void {
         localStorage.removeItem("accountNumber");
     }
 
@@ -54,7 +54,7 @@ export default class Session {
         if (sessionId === null) {
             return false;
         }
-        const accountNumber = Session.getStoredaccountNumber();
+        const accountNumber = Session.getStoredAccountNumber();
         if (accountNumber === null) {
             return false;
         }

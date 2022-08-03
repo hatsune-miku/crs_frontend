@@ -6,7 +6,7 @@ const Columns = [
     {field: "isOpen", type: 'boolean', headerName: "Open?"},
     {field: "isElective", type: 'boolean', headerName: "Elective?"},
     {field: "credit", headerName: "Credit"},
-    {field: "staffNumber", width: 200, headerName: "Staff Number",
+    {field: "staffNumber", width: 200, headerName: "Staff",
         postProcessor: TableFunctions.filterInstructorWithName},
     {field: "startDate", width: 200, type: 'date', headerName: "From"},
     {field: "endDate", width: 200, type: 'date', headerName: "To"},

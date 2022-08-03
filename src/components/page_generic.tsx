@@ -182,7 +182,7 @@ export default class PageGeneric extends React.Component<PageAdminProps, PageAdm
             promptCancelButtonText: "Cancel",
             promptOkButtonText: "Logout",
             promptChild: <Chip variant="soft" startDecorator={<Key/>}>
-                Current User: {Session.getStoredaccountNumber()}
+                Current User: {Session.getStoredAccountNumber()}
             </Chip>,
             promptOkButtonColor: "primary",
             promptCancelButtonInvisible: false,
@@ -232,7 +232,7 @@ export default class PageGeneric extends React.Component<PageAdminProps, PageAdm
             if (subject === 'logout' && action === 'ok') {
                 // Perform logout.
                 Session.clearStoredSessionId();
-                Session.clearStoredaccountNumber();
+                Session.clearStoredAccountNumber();
                 this.setState({redirectTo: '/'});
 
             } else if (subject === 'delete' && action === 'ok') {
@@ -325,6 +325,10 @@ export default class PageGeneric extends React.Component<PageAdminProps, PageAdm
             shouldShowPrompt: false,
         }, () => {
             const setValueAndUpdate = (field: string, value: any) => {
+                // We need to update a property of state object and
+                // changing the state directly and then call forceUpdate()
+                // is the only way.
+                // eslint-disable-next-line
                 this.state.currentEditingModel[field] = value;
                 this.forceUpdate();
             };
@@ -435,7 +439,7 @@ export default class PageGeneric extends React.Component<PageAdminProps, PageAdm
         }
 
         this.showCreateRecordDialog(columns, CommonlyGivenFields.concat([
-            {fieldName: 'staffNumber', value: Session.getStoredaccountNumber()},
+            {fieldName: 'staffNumber', value: Session.getStoredAccountNumber()},
         ]));
     }
 
@@ -447,7 +451,7 @@ export default class PageGeneric extends React.Component<PageAdminProps, PageAdm
         }
 
         this.showCreateRecordDialog(columns, CommonlyGivenFields.concat([
-            {fieldName: 'studentNumber', value: Session.getStoredaccountNumber()},
+            {fieldName: 'studentNumber', value: Session.getStoredAccountNumber()},
         ]));
     }
 
@@ -455,282 +459,185 @@ export default class PageGeneric extends React.Component<PageAdminProps, PageAdm
     teamNav(): React.ReactNode {
         return (
             <List size="sm" sx={{'--List-item-radius': '8px'}}>
-                <ListItem nested sx={{p: 0}}>
-                    <Box
-                        sx={{
-                            mb: 1,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                        }}
-                    >
-                        <Typography
-                            id="nav-list-browse"
-                            textColor="neutral.500"
-                            fontWeight={700}
-                            sx={{
-                                fontSize: '10px',
-                                textTransform: 'uppercase',
-                                letterSpacing: '.1rem',
-                            }}
-                        >
-                            Management
-                        </Typography>
-                    </Box>
-                    <List
-                        aria-labelledby="nav-list-browse"
-                        sx={{
-                            '& .JoyListItemButton-root': {p: '8px'},
-                        }}
-                    >
+                {
+                    // outer list
+                    [
+                        // Items layer
                         {
-                            [
+                            label: "Management",
+                            required_role: ["admin"],
+                            items: [
                                 {
                                     category: 'student',
                                     entity: 'student',
                                     label: "Student Management",
+                                    required_role: ["admin"]
                                 },
                                 {
                                     category: 'staff',
                                     entity: 'staff',
                                     label: "Staff Management",
+                                    required_role: ["admin"]
                                 },
                                 {
                                     category: 'major',
                                     entity: 'major',
                                     label: "Major Management",
+                                    required_role: ["admin"]
                                 },
                                 {
                                     category: 'plan',
                                     entity: 'plan',
                                     label: "Plan Management",
+                                    required_role: ["admin"]
                                 },
                                 {
                                     category: 'course',
                                     entity: 'course',
                                     label: "Course Management",
+                                    required_role: ["admin"]
                                 },
                                 {
                                     category: 'registration',
                                     entity: 'registration',
                                     label: "Registration Management",
+                                    required_role: ["admin"]
                                 },
                                 {
                                     category: 'grade',
                                     entity: 'grade',
                                     label: "Grade Management",
+                                    required_role: ["admin"]
                                 },
-                            ].map(item => (
-                                <ListItem key={item.category}>
-                                    <ListItemButton
-                                        variant={this.state.currentCategory === item.category ? 'soft' : 'plain'}
-                                        onClick={this.handleSwitchFunction.bind(this, item.category, item.entity)}
-                                        selected={this.state.currentCategory === item.category}>
-                                        <ListItemDecorator>
-                                            <LensRounded fontSize="small"/>
-                                        </ListItemDecorator>
-                                        <ListItemContent>{item.label}</ListItemContent>
-                                    </ListItemButton>
-                                </ListItem>
-                            ))
-                        }
-                    </List>
-                </ListItem>
-
-                <ListDivider/>
-
-                <ListItem nested sx={{p: 0, mt: 2}}>
-                    <Box
-                        sx={{
-                            mb: 1,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                        }}
-                    >
-                        <Typography
-                            id="nav-list-browse"
-                            textColor="neutral.500"
-                            fontWeight={700}
-                            sx={{
-                                fontSize: '10px',
-                                textTransform: 'uppercase',
-                                letterSpacing: '.1rem',
-                            }}
-                        >
-                            Student's Group
-                        </Typography>
-                    </Box>
-                    <List
-                        aria-labelledby="nav-list-browse"
-                        sx={{
-                            '& .JoyListItemButton-root': {p: '8px'},
-                        }}
-                    >
+                            ]
+                        },
                         {
-                            [
+                            label: "Students' Group",
+                            required_role: ["student"],
+                            items: [
                                 {
                                     category: 'stu-view-course',
                                     entity: 'course',
                                     label: "Lookup Courses",
+                                    required_role: ["student"]
                                 },
                                 {
                                     category: 'stu-view-grade',
                                     entity: 'grade',
                                     label: "Lookup Grades",
+                                    required_role: ["student"]
                                 },
                                 {
                                     category: 'stu-add-reg',
                                     entity: 'registration',
                                     label: "Register for Courses",
+                                    required_role: ["student"]
                                 },
-                            ].map(item => (
-                                <ListItem key={item.category}>
-                                    <ListItemButton
-                                        variant={this.state.currentCategory === item.category ? 'soft' : 'plain'}
-                                        onClick={this.handleSwitchFunction.bind(this, item.category, item.entity)}
-                                        selected={this.state.currentCategory === item.category}>
-                                        <ListItemDecorator>
-                                            <LensRounded fontSize="small"/>
-                                        </ListItemDecorator>
-                                        <ListItemContent>{item.label}</ListItemContent>
-                                    </ListItemButton>
-                                </ListItem>
-                            ))
-                        }
-                    </List>
-                </ListItem>
-
-                <ListDivider/>
-
-                <ListItem nested sx={{p: 0, mt: 2}}>
-                    <Box
-                        sx={{
-                            mb: 1,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                        }}
-                    >
-                        <Typography
-                            id="nav-list-browse"
-                            textColor="neutral.500"
-                            fontWeight={700}
-                            sx={{
-                                fontSize: '10px',
-                                textTransform: 'uppercase',
-                                letterSpacing: '.1rem',
-                            }}
-                        >
-                            Staff's Group
-                        </Typography>
-                    </Box>
-                    <List
-                        aria-labelledby="nav-list-browse"
-                        sx={{
-                            '& .JoyListItemButton-root': {p: '8px'},
-                        }}
-                    >
+                            ]
+                        },
                         {
-                            [
-                                {
-                                    category: 'sta-view-course',
-                                    entity: 'course',
-                                    label: "Lookup Courses",
-                                },
-                                {
-                                    category: 'sta-view-student',
-                                    entity: 'student',
-                                    label: "My Students",
-                                },
+                            label: "Staff's Group",
+                            required_role: ["staff"],
+                            items: [
                                 {
                                     category: 'sta-view-my-course',
                                     entity: 'course',
-                                    label: "My Courses",
+                                    label: "View Courses",
+                                    required_role: ["staff"]
                                 },
                                 {
-                                    category: 'sta-view-registration',
-                                    entity: 'registration',
-                                    label: "View Course Registrations",
+                                    category: 'sta-my-students',
+                                    entity: 'student',
+                                    label: "My Students",
+                                    required_role: ["staff"]
                                 },
-                            ].map(item => (
-                                <ListItem key={item.category}>
-                                    <ListItemButton
-                                        variant={this.state.currentCategory === item.category ? 'soft' : 'plain'}
-                                        onClick={this.handleSwitchFunction.bind(this, item.category, item.entity)}
-                                        selected={this.state.currentCategory === item.category}>
-                                        <ListItemDecorator>
-                                            <LensRounded fontSize="small"/>
-                                        </ListItemDecorator>
-                                        <ListItemContent>{item.label}</ListItemContent>
-                                    </ListItemButton>
-                                </ListItem>
-                            ))
-                        }
-                    </List>
-                </ListItem>
-
-                <ListDivider/>
-
-                <ListItem nested sx={{p: 0, mt: 2}}>
-                    <Box
-                        sx={{
-                            mb: 1,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                        }}
-                    >
-                        <Typography
-                            id="nav-list-browse"
-                            textColor="neutral.500"
-                            fontWeight={700}
-                            sx={{
-                                fontSize: '10px',
-                                textTransform: 'uppercase',
-                                letterSpacing: '.1rem',
-                            }}
-                        >
-                            Other
-                        </Typography>
-                    </Box>
-                    <List
-                        aria-labelledby="nav-list-browse"
-                        sx={{
-                            '& .JoyListItemButton-root': {p: '8px'},
-                        }}
-                    >
+                                {
+                                    category: 'sta-view-my-grade',
+                                    entity: 'grade',
+                                    label: "View Grades",
+                                    required_role: ["staff"]
+                                }
+                            ]
+                        },
                         {
-                            [
+                            label: "Other",
+                            required_role: ["admin", "staff", "student"],
+                            items: [
                                 {
                                     category: 'engi',
                                     entity: 'engi',
                                     label: "ENGI-9874",
+                                    required_role: ["admin", "staff", "student"]
                                 },
                                 {
                                     category: 'about',
                                     entity: 'about',
                                     label: "About Group 9",
+                                    required_role: ["admin", "staff", "student"]
                                 },
-                            ].map(item => (
-                                <ListItem key={item.category}>
-                                    <ListItemButton
-                                        variant={this.state.currentCategory === item.category ? 'soft' : 'plain'}
-                                        onClick={() => this.setState({
-                                            currentCategory: item.category,
-                                            currentEntity: item.entity,
-                                        })}
-                                        selected={this.state.currentCategory === item.category}>
-                                        <ListItemDecorator>
-                                            <LensRounded fontSize="small"/>
-                                        </ListItemDecorator>
-                                        <ListItemContent>{item.label}</ListItemContent>
-                                    </ListItemButton>
-                                </ListItem>
-                            ))
+                            ]
                         }
-                    </List>
-                </ListItem>
+                    ].filter(
+                        g => g.required_role.includes(
+                            Session.getStoredRole()?.toLowerCase() ?? ""
+                        )
+                    ).map((group, i, arr) =>
+                        <div>
+                            <ListItem nested sx={{p: 0, mt: 2}}>
+                                <Box
+                                    sx={{
+                                        mb: 1,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                    }}
+                                >
+                                    <Typography
+                                        id="nav-list-browse"
+                                        textColor="neutral.500"
+                                        fontWeight={700}
+                                        sx={{
+                                            fontSize: '10px',
+                                            textTransform: 'uppercase',
+                                            letterSpacing: '.1rem',
+                                        }}
+                                    >
+                                        { group.label }
+                                    </Typography>
+                                </Box>
+                                <List
+                                    aria-labelledby="nav-list-browse"
+                                    sx={{
+                                        '& .JoyListItemButton-root': {p: '8px'},
+                                    }}
+                                >
+                                    {
+                                        group.items.filter(
+                                            item => item.required_role.includes(
+                                                Session.getStoredRole()?.toLowerCase()
+                                                ?? ""
+                                            ))
+                                            .map(item => (
+                                                    <ListItem key={item.category}>
+                                                        <ListItemButton
+                                                            variant={this.state.currentCategory === item.category ? 'soft' : 'plain'}
+                                                            onClick={this.handleSwitchFunction.bind(this, item.category, item.entity)}
+                                                            selected={this.state.currentCategory === item.category}>
+                                                            <ListItemDecorator>
+                                                                <LensRounded fontSize="small"/>
+                                                            </ListItemDecorator>
+                                                            <ListItemContent>{item.label}</ListItemContent>
+                                                        </ListItemButton>
+                                                    </ListItem>
+                                                )
+                                            )
+                                    }
+                                </List>
+                            </ListItem>
+                            {i === arr.length - 1 && <ListDivider/>}
+                        </div>
+                    )
+                }
             </List>
         );
     }
@@ -915,20 +822,18 @@ export default class PageGeneric extends React.Component<PageAdminProps, PageAdm
 
                         {
                             // Staff add course
-                            (
-                                this.state.currentCategory === "sta-view-my-course"
-                                    ? (
-                                        <Button
-                                            size="sm"
-                                            color="primary"
-                                            fullWidth={true}
-                                            onClick={this.handleStaffCreateCourse.bind(this)}
-                                        >
-                                            Create New Course
-                                        </Button>
-                                    )
-                                    : null
-                            )
+                            this.state.currentCategory === "sta-view-my-course"
+                                ? (
+                                    <Button
+                                        size="sm"
+                                        color="primary"
+                                        fullWidth={true}
+                                        onClick={this.handleStaffCreateCourse.bind(this)}
+                                    >
+                                        Create New Course
+                                    </Button>
+                                )
+                                : null
                         }
 
                         {
