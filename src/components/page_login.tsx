@@ -190,6 +190,7 @@ export default class PageLogin extends React.Component<PageLoginProps,
 
                 <div style={{margin: "25px"}}>
                     <Input
+                        id="username"
                         placeholder="User ID"
                         onChange={this.handleUsernameChange}
                         onKeyDown={(e) => {
@@ -199,6 +200,7 @@ export default class PageLogin extends React.Component<PageLoginProps,
                     ></Input>
 
                     <Input
+                        id="password"
                         placeholder="Password"
                         type="password"
                         style={{marginTop: "10px"}}
@@ -224,8 +226,8 @@ export default class PageLogin extends React.Component<PageLoginProps,
                             display: "inline",
                         }}
                     >
-                        <Radio value="student" label="Student"/>
-                        <Radio value="staff" label="Staff"/>
+                        <Radio id="radio-student" value="student" label="Student"/>
+                        <Radio id="radio-staff" value="staff" label="Staff"/>
                     </RadioGroup>
                 </div>
 

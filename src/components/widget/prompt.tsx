@@ -75,6 +75,7 @@ class PromptBox extends React.Component<PromptBoxProps, PromptBoxStates> {
                                                 fullWidth={true}
                                                 style={{width: '100px'}}
                                                 onClick={() => this.props.onAction(this.props.subject, 'ok')}
+                                                id="button-ok"
                                             >
                                                 {this.props.okButtonText || 'OK'}
                                             </Button>
@@ -86,6 +87,7 @@ class PromptBox extends React.Component<PromptBoxProps, PromptBoxStates> {
                                                         variant="solid" size="md" color="neutral"
                                                         style={{width: '100px'}}
                                                         onClick={() => this.props.onAction(this.props.subject, 'cancel')}
+                                                        id="button-cancel"
                                                     >
                                                         {this.props.cancelButtonText || 'Cancel'}
                                                     </Button>

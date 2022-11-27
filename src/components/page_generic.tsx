@@ -285,8 +285,6 @@ export default class PageGeneric extends React.Component<PageAdminProps, PageAdm
     }
 
     async performAdd() {
-        // TODO:
-        // Process password md5.
         if (this.state.currentEditingModel.passwordMd5) {
             this.state.currentEditingModel.passwordMd5 =
                 md5(this.state.currentEditingModel.passwordMd5)
@@ -456,6 +454,9 @@ export default class PageGeneric extends React.Component<PageAdminProps, PageAdm
     }
 
 
+    /**
+     * 这块儿实在是赶工痕迹严重
+     */
     teamNav(): React.ReactNode {
         return (
             <List size="sm" sx={{'--List-item-radius': '8px'}}>
@@ -918,7 +919,7 @@ export default class PageGeneric extends React.Component<PageAdminProps, PageAdm
                             >
                                 <GroupRoundedIcon/>
                             </IconButton>
-                            <Typography component="h1" fontWeight="xl">
+                            <Typography component="h1" fontWeight="xl" id="login-role">
                                 {Session.getStoredName()} - {this.getRoleDescription()} @ CRS
                             </Typography>
                         </Box>
@@ -931,6 +932,7 @@ export default class PageGeneric extends React.Component<PageAdminProps, PageAdm
                                         variant="solid"
                                         color="neutral"
                                         aria-label="Apps"
+                                        id="icon-settings"
                                     >
                                         <MaterialSettings/>
                                     </IconButton>
@@ -938,18 +940,21 @@ export default class PageGeneric extends React.Component<PageAdminProps, PageAdm
                                 menus={[
                                     {
                                         label: 'Dark Mode',
+                                        id: 'dark-mode',
                                         onClick: () => {
                                             this.changeColorScheme('dark')
                                         },
                                     },
                                     {
                                         label: 'Light Mode',
+                                        id: 'light-mode',
                                         onClick: () => {
                                             this.changeColorScheme('light')
                                         },
                                     },
                                     {
                                         label: 'Follow System',
+                                        id: 'follow-system',
                                         onClick: () => {
                                             this.changeColorScheme('system')
                                         },
@@ -964,6 +969,7 @@ export default class PageGeneric extends React.Component<PageAdminProps, PageAdm
                                         variant="solid"
                                         color="primary"
                                         aria-label="Apps"
+                                        id="icon-key"
                                     >
                                         <KeyRounded/>
                                     </IconButton>
@@ -971,6 +977,7 @@ export default class PageGeneric extends React.Component<PageAdminProps, PageAdm
                                 menus={[
                                     {
                                         label: 'Logout',
+                                        id: 'logout',
                                         onClick: this.handleLogout.bind(this),
                                     },
                                 ]}

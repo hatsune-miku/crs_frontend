@@ -1,29 +1,29 @@
 import * as React from 'react';
-import InputUnstyled, { InputUnstyledProps } from '@mui/base/InputUnstyled';
-import { styled } from '@mui/system';
+import InputUnstyled, {InputUnstyledProps} from '@mui/base/InputUnstyled';
+import {styled} from '@mui/system';
 
 const blue = {
-  100: '#DAECFF',
-  200: '#80BFFF',
-  400: '#3399FF',
-  600: '#0072E5',
+    100: '#DAECFF',
+    200: '#80BFFF',
+    400: '#3399FF',
+    600: '#0072E5',
 };
 
 const grey = {
-  50: '#F3F6F9',
-  100: '#E7EBF0',
-  200: '#E0E3E7',
-  300: '#CDD2D7',
-  400: '#B2BAC2',
-  500: '#A0AAB4',
-  600: '#6F7E8C',
-  700: '#3E5060',
-  800: '#2D3843',
-  900: '#1A2027',
+    50: '#F3F6F9',
+    100: '#E7EBF0',
+    200: '#E0E3E7',
+    300: '#CDD2D7',
+    400: '#B2BAC2',
+    500: '#A0AAB4',
+    600: '#6F7E8C',
+    700: '#3E5060',
+    800: '#2D3843',
+    900: '#1A2027',
 };
 
 const StyledInputElement = styled('input')(
-  ({ theme }) => `
+    ({theme}) => `
   width: 320px;
   font-size: 0.875rem;
   font-family: IBM Plex Sans, sans-serif;
@@ -47,12 +47,12 @@ const StyledInputElement = styled('input')(
 );
 
 const Input = React.forwardRef(function CustomInput(
-  props: InputUnstyledProps,
-  ref: React.ForwardedRef<HTMLDivElement>,
+    props: InputUnstyledProps,
+    ref: React.ForwardedRef<HTMLDivElement>,
 ) {
-  return (
-    <InputUnstyled components={{ Input: StyledInputElement }} {...props} ref={ref} />
-  );
+    return (
+        <InputUnstyled components={{Input: StyledInputElement}} {...props} ref={ref}/>
+    );
 });
 
-export { Input }
+export {Input}

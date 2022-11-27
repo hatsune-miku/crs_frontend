@@ -1,5 +1,5 @@
-import axios, {AxiosPromise, AxiosResponse} from "axios";
-import { PagedEntityList, LoginResponse } from "../protocol/response_types";
+import axios, {AxiosPromise } from "axios";
+import { LoginResponse } from "../protocol/response_types";
 import Session from "./session";
 
 export default class Network {
